@@ -22,7 +22,12 @@ public class BulletController : MonoBehaviour
         m_rb2d.velocity = v;                      // 速度ベクトルを弾にセットする
     }
 
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Finish タグのついた Trigger に接触したら弾を消す
+        if (collision.gameObject.tag == "Finish")
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
