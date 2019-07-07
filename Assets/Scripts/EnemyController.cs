@@ -7,7 +7,9 @@ using UnityEngine;
 /// </summary>
 public class EnemyController : MonoBehaviour
 {
+    /// <summary>発射する弾のプレハブ</summary>
     [SerializeField] GameObject m_bulletPrefab;
+    /// <summary>弾を発射する間隔（秒）</summary>
     [SerializeField] float m_fireInterval = 1f;
     float m_timer;
 
@@ -18,6 +20,7 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        // m_fireInterval 秒ごとに弾を生成する
         m_timer += Time.deltaTime;
 
         if (m_timer > m_fireInterval)
@@ -40,6 +43,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// やられた時に呼ぶ関数
+    /// </summary>
     void Kill()
     {
         Destroy(this.gameObject);
