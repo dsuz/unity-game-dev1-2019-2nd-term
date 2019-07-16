@@ -11,6 +11,7 @@ public class SceneLoader : MonoBehaviour
     /// <param name="sceneName">読み込みたいシーンの名前</param>
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
+        // SceneManager.LoadScene(sceneName);   // シンプルにシーンを切り替える
+        Initiate.Fade(sceneName, Color.black, 1.0f);    // フェードしながら切り替える
     }
 }
