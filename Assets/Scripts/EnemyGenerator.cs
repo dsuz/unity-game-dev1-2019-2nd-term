@@ -64,4 +64,13 @@ public class EnemyGenerator : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 敵の生成を停止する
+    /// </summary>
+    public void StopGeneration()
+    {
+        // フラグを倒す
+        m_isWorking = false;
+    }
 }

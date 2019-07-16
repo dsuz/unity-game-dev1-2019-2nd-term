@@ -19,6 +19,11 @@ public class EnemyBulletController : MonoBehaviour
 
         // プレイヤーに向かっていく方向のベクトルを計算する
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (!player)    // プレイヤーがいない時は弾を出さない（４週目で追加）
+        {
+            Destroy(this.gameObject);
+            return;
+        }
         Vector2 dir = player.transform.position - this.transform.position;
         dir = dir.normalized;
 

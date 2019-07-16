@@ -32,6 +32,9 @@ public class MoveObjectCurve : MonoBehaviour
 
     void Update()
     {
+        // Player がいなくなった時のための処理（４週目）
+        if (!m_player) return;
+
         // プレイヤーとある程度近づいたら
         if (this.transform.position.y - m_player.position.y < m_playerOffsetY)
         {

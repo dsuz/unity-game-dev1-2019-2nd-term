@@ -61,4 +61,31 @@ public class PlayerController : MonoBehaviour
             m_audio.Play();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
+        {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// やられた時に呼び出す
+    /// </summary>
+    void Die()
+    {
+        // GameManager にやられたことを知らせる
+        GameObject gameManagerObject = GameObject.Find("GameManager");
+        if (gameManagerObject)
+        {
+            GameManager gameManager = gameManagerObject.GetComponent<GameManager>();
+            if (gameManager)
+            {
+                gameManager.PlayerDead();
+            }
+        }
+
+        Destroy(this.gameObject);   // オブジェクトを破棄する
+    }
 }

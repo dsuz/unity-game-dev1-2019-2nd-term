@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 50126858258573834}
   m_Layer: 0
   m_Name: EnemyStraightDownPrefab
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
