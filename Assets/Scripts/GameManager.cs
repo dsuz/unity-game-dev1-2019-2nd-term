@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     /// <summary>残機数</summary>
     [SerializeField] int m_life = 3;
     /// <summary>得点</summary>
-    [SerializeField] int m_score;
+    int m_score;
     /// <summary>自機のプレハブを指定する</summary>
     [SerializeField] GameObject m_playerPrefab;
     /// <summary>ゲームの初期化が終わってからゲームが始まるまでの待ち時間</summary>
