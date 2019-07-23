@@ -11,6 +11,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField] GameObject m_bulletPrefab;
     /// <summary>弾を発射する間隔（秒）</summary>
     [SerializeField] float m_fireInterval = 1f;
+    /// <summary>破壊することで得られる得点</summary>
+    int m_score = 100;
+    /// <summary>既にやられているかどうかを判定するフラグ</summary>
+    bool m_isDead = false;
+    /// <summary>タイマー</summary>
     float m_timer;
 
     void Start()
@@ -48,6 +53,22 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     void Kill()
     {
-        Destroy(this.gameObject);
+        // 初回のみ得点を加算する
+        if (m_isDead == false)
+        {
+            m_isDead = true;
+
+            GameObject go = GameObject.Find("GameManager");
+            if (go)
+            {
+                GameManager gm = go.GetComponent<GameManager>();
+                if (gm)
+                {
+                    gm.AddScore(m_score);
+                }
+            }
+            
+            Destroy(this.gameObject);
+        }
     }
 }

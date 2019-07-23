@@ -6,7 +6,7 @@ using UnityEngine;
 /// ゲーム全体を管理するクラス。
 /// EnemyGenerator と同じ GameObject にアタッチする必要がある。
 /// </summary>
-[RequireComponent(typeof(EnemyGenerator))]
+[RequireComponent(typeof(EnemyGenerator), typeof(PlayerCounter))]
 public class GameManager : MonoBehaviour
 {
     /// <summary>残機数</summary>
@@ -23,6 +23,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] string m_titleSceneName = "Title";
     /// <summary>EnemyGenerator を保持しておく変数</summary>
     EnemyGenerator m_enemyGenerator;
+    /// <summary>残機表示をする PlayerCounter を保持しておく変数</summary>
+    PlayerCounter m_playerCounter;
+    /// <summary>スコア表示用 Text</summary>
+    [SerializeField] UnityEngine.UI.Text m_scoreText;
     /// <summary>タイマー</summary>
     float m_timer;
     /// <summary>ゲームの状態</summary>
@@ -33,6 +37,9 @@ public class GameManager : MonoBehaviour
         // EnemyGenerator を取得しておき、まずは敵の生成をしない。
         m_enemyGenerator = GetComponent<EnemyGenerator>();
         m_enemyGenerator.StopGeneration();
+
+        m_playerCounter = GetComponent<PlayerCounter>();
+        AddScore(0);
     }
 
     void Update()
@@ -42,6 +49,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Initialize.");
             Instantiate(m_playerPrefab);    // プレイヤーを生成する
             m_status = 1;   // ステータスを初期化済みにする
+            m_playerCounter.Refresh(m_life);    // 残機表示を更新する
         }
         else if (m_status == 1) // 初期化済み、開始前
         {
@@ -81,6 +89,7 @@ public class GameManager : MonoBehaviour
     public void AddScore(int score)
     {
         m_score += score;
+        m_scoreText.text = "Score: " + m_score.ToString("d10");
     }
 
     /// <summary>
