@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform m_muzzle;
     /// <summary>一画面の最大段数（非連射時）</summary>
     [SerializeField] int m_bulletLimit = 3;
+    /// <summary>爆発エフェクト</summary>
+    [SerializeField] GameObject m_explosionEffect;
     AudioSource m_audio;
     Rigidbody2D m_rb2d;
 
@@ -84,6 +86,12 @@ public class PlayerController : MonoBehaviour
             {
                 gameManager.PlayerDead();
             }
+        }
+
+        // 爆発エフェクトを置く
+        if (m_explosionEffect)
+        {
+            Instantiate(m_explosionEffect, this.transform.position, Quaternion.identity);
         }
 
         Destroy(this.gameObject);   // オブジェクトを破棄する

@@ -12,7 +12,9 @@ public class EnemyController : MonoBehaviour
     /// <summary>弾を発射する間隔（秒）</summary>
     [SerializeField] float m_fireInterval = 1f;
     /// <summary>破壊することで得られる得点</summary>
-    int m_score = 100;
+    [SerializeField] int m_score = 100;
+    /// <summary>爆発エフェクト</summary>
+    [SerializeField] GameObject m_explosionEffect;
     /// <summary>既にやられているかどうかを判定するフラグ</summary>
     bool m_isDead = false;
     /// <summary>タイマー</summary>
@@ -67,7 +69,13 @@ public class EnemyController : MonoBehaviour
                     gm.AddScore(m_score);
                 }
             }
-            
+
+            // 爆発エフェクトを置く
+            if (m_explosionEffect)
+            {
+                Instantiate(m_explosionEffect, this.transform.position, Quaternion.identity);
+            }
+
             Destroy(this.gameObject);
         }
     }

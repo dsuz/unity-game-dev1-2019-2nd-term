@@ -111,6 +111,9 @@ MonoBehaviour:
   m_bulletPrefab: {fileID: 1911838083576924, guid: 802dd2a0c58a87044826a01511147de1,
     type: 2}
   m_fireInterval: 1
+  m_score: 100
+  m_explosionEffect: {fileID: 1298421075453984, guid: 181290dfed0a6a34ea03bfd11d401e42,
+    type: 2}
 --- !u!114 &114627692423330472
 MonoBehaviour:
   m_ObjectHideFlags: 1
