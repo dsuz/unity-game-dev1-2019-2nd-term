@@ -30,7 +30,9 @@ public class GameManager : MonoBehaviour
     /// <summary>タイマー</summary>
     float m_timer;
     /// <summary>ゲームの状態</summary>
-    int m_status = 0;    // 0: ゲーム初期化前, 1: ゲーム初期化済み、ゲーム開始前, 2: ゲーム中, 3: プレイヤーがやられた
+    // int m_status = 0;    // 0: ゲーム初期化前, 1: ゲーム初期化済み、ゲーム開始前, 2: ゲーム中, 3: プレイヤーがやられた
+    // ↑ Enum で表現するように変更する
+    GameState m_status = GameState.NonInitialized;
 
     void Start()
     {
@@ -44,41 +46,49 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (m_status == 0)  // 初期化前
+        // if (m_status == 0)  // 初期化前
+        switch (m_status)   // ゲームの状態によって処理をわける
         {
-            Debug.Log("Initialize.");
-            Instantiate(m_playerPrefab);    // プレイヤーを生成する
-            m_status = 1;   // ステータスを初期化済みにする
-            m_playerCounter.Refresh(m_life);    // 残機表示を更新する
-        }
-        else if (m_status == 1) // 初期化済み、開始前
-        {
-            m_timer += Time.deltaTime;
-            if (m_timer > m_waitTimeUntilGameStarts)    // 待つ
-            {
-                Debug.Log("Game Start.");
-                m_timer = 0f;   // タイマーをリセットする
-                m_status = 2;   // ステータスをゲーム中にする
-                m_enemyGenerator.StartGeneration(); // 敵の生成を開始する
-            }
-        }
-        else if (m_status == 3) // プレイヤーがやられた
-        {
-            m_timer += Time.deltaTime;
-            if (m_timer > m_waitTimeAfterPlayerDeath)   // 待つ
-            {
-                if (m_life > 0) // 残機がまだある場合
+            case GameState.NonInitialized:
+                Debug.Log("Initialize.");
+                Instantiate(m_playerPrefab);    // プレイヤーを生成する
+                m_status = GameState.Initialized;   // ステータスを初期化済みにする
+                m_playerCounter.Refresh(m_life);    // 残機表示を更新する
+                break;
+        // }
+        // else if (m_status == 1) // 初期化済み、開始前
+        // {
+            case GameState.Initialized:
+                m_timer += Time.deltaTime;
+                if (m_timer > m_waitTimeUntilGameStarts)    // 待つ
                 {
-                    Debug.Log("Restart Game.");
+                    Debug.Log("Game Start.");
                     m_timer = 0f;   // タイマーをリセットする
-                    m_status = 0;   // 初期化するためにステータスを更新する
-                    ClearScene();
+                    m_status = GameState.InGame;   // ステータスをゲーム中にする
+                    m_enemyGenerator.StartGeneration(); // 敵の生成を開始する
                 }
-                else
+                break;
+        // }
+        // else if (m_status == 3) // プレイヤーがやられた
+        // {
+            case GameState.PlayerDead:
+                m_timer += Time.deltaTime;
+                if (m_timer > m_waitTimeAfterPlayerDeath)   // 待つ
                 {
-                    GameOver(); // 残機がもうない場合はゲームオーバーにする
+                    if (m_life > 0) // 残機がまだある場合
+                    {
+                        Debug.Log("Restart Game.");
+                        m_timer = 0f;   // タイマーをリセットする
+                        m_status = 0;   // 初期化するためにステータスを更新する
+                        ClearScene();
+                    }
+                    else
+                    {
+
+                        GameOver(); // 残機がもうない場合はゲームオーバーにする
+                    }
                 }
-            }
+                break;
         }
     }
 
@@ -100,7 +110,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player Dead.");
         m_enemyGenerator.StopGeneration();  // 敵の生成を止める
         m_life -= 1;    // 残機を減らす
-        m_status = 3;   // ステータスをプレイヤーがやられた状態に更新する
+        m_status = GameState.PlayerDead;   // ステータスをプレイヤーがやられた状態に更新する
     }
 
     /// <summary>
@@ -131,4 +141,16 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game over. Return to title scene.");
         Initiate.Fade(m_titleSceneName, Color.black, 1.0f); // タイトル画面に戻る
     }
+}
+
+enum GameState
+{
+    /// <summary>ゲーム初期化前</summary>
+    NonInitialized,
+    /// <summary>ゲーム初期化済み、ゲーム開始前</summary>
+    Initialized,
+    /// <summary>ゲーム中</summary>
+    InGame,
+    /// <summary>プレイヤーがやられた</summary>
+    PlayerDead,
 }

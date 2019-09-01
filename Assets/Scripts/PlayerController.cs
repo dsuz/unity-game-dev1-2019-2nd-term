@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// using Cinemachine;  // Cinemachine を使うため
 
 /// <summary>
 /// シューティングゲームの自機を操作するためのコンポーネント
@@ -8,6 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    /// <summary>無敵モード</summary>
+    [SerializeField] bool m_godMode = false;
     /// <summary>プレイヤーの移動速度</summary>
     [SerializeField] float m_moveSpeed = 5f;
     /// <summary>弾のプレハブ</summary>
@@ -20,11 +23,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject m_explosionEffect;
     AudioSource m_audio;
     Rigidbody2D m_rb2d;
+    bool m_isPlayerDead;
 
     void Start()
     {
         m_rb2d = GetComponent<Rigidbody2D>();
         m_audio = GetComponent<AudioSource>();
+
+        // Virtual Camera がプレイヤーを見るように設定する
+        /*
+        CinemachineVirtualCamera vCam = GameObject.FindObjectOfType<CinemachineVirtualCamera>();
+        if (vCam)
+        {
+            vCam.Follow = transform;
+        }
+        */
     }
 
     void Update()
@@ -66,9 +79,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
+        if (!m_godMode && !m_isPlayerDead) // 無敵モードの時は敵に当たったかどうかも判定する必要はない
         {
-            Die();
+            if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
+            {
+                Die();
+            }
         }
     }
 
@@ -77,6 +93,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Die()
     {
+        // プレイヤーがやられたフラグを立てる
+        m_isPlayerDead = true;
+
         // GameManager にやられたことを知らせる
         GameObject gameManagerObject = GameObject.Find("GameManager");
         if (gameManagerObject)
